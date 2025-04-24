@@ -14,56 +14,41 @@ import Layout from "../components/layout/layout";
 import ProtectedRoute from "./ProtectedRoute"; // à créer juste après
 
 const router = createBrowserRouter([
+  // Route login (sans layout)
+  {
+    path: "/intranet",
+    element: <ScolariteLogin />,
+  },
+
+  // Route dashboard (authentifié, sans navbar)
+  {
+    path: "/dashboard",
+    element: (
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: "preinscription",
+        element: <PreinscriptionPage />,
+      },
+      // autres enfants
+    ],
+  },
+
+  // Routes publiques (avec Navbar via Layout)
   {
     path: "/",
     element: <Layout />,
     children: [
-      {
-        path: "",
-        element: <Carousel />,
-      },
-      {
-        path: "/preinscription",
-        element: <PreInscriptionForm />,
-      },
-      {
-        path: "/inscription",
-        element: <InscriptionForm />,
-      },
-      {
-        path: "/resultats",
-        element: <ResultatsPage />,
-      },
-      {
-        path: "/intranet",
-        element: <ScolariteLogin />,
-      },
-      {
-        path: "/actualite",
-        element: <ActualitesPage />,
-      },
-      {
-        path: "/dashboard",
-        element: (
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        ),
-        children: [
-          {
-            path: "preinscription",
-            element: <PreinscriptionPage />,
-          },
-
-          // autres enfants...
-        ],
-      },
-      {
-        path: "*",
-        element: <Navigate to="/" />,
-      },
+      { path: "", element: <Carousel /> },
+      { path: "preinscription", element: <PreInscriptionForm /> },
+      { path: "inscription", element: <InscriptionForm /> },
+      { path: "resultats", element: <ResultatsPage /> },
+      { path: "actualite", element: <ActualitesPage /> },
+      { path: "*", element: <Navigate to="/" /> },
     ],
   },
 ]);
-
 export default router;
