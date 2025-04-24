@@ -1,10 +1,17 @@
+import { BrowserRouter as Router } from "react-router-dom";
+import AppRoutes from "./routes/routes";
+import Navbar from "./components/common/navbar";
+import { useAuth } from "./contexts/authContexts";
 import "./App.css";
-import InstitutLandingPage from "./pages/landing/lanfing-page";
+
 function App() {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <div className="App">
-      <InstitutLandingPage />
-    </div>
+    <Router>
+      {!isAuthenticated && <Navbar />}
+      <AppRoutes />
+    </Router>
   );
 }
 
