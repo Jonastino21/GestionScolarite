@@ -4,3 +4,4 @@ Commit numéro 3
 Commit numéro 4
 Commit numéro 5
 Commit numéro 6
+Commit numéro 7
