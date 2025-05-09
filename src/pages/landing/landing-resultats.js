@@ -24,138 +24,68 @@ function ResultatsPage() {
   }, [typeRecherche]);
 
   // Données simulées pour les résultats
-  const resultatsSimules = {
-    123456789: {
-      // CIN pour pré-inscription
-      preinscription: {
-        statut: "Accepté",
-        date: "15/09/2023",
-        parcours: "Génie Informatique",
-        mention:
-          "Sciences et Techniques du Numérique et Physiques Appliqués (STNPA)",
-        frais: "250 000 Ar",
-        message:
-          "Veuillez procéder au paiement des frais d'inscription avant le 30/09/2023",
-        nom: "Rakoto",
-        prenom: "Jean",
-      },
-      matricule: "2023L001", // Attribué après acceptation
-    },
-    987654321: {
-      preinscription: {
-        statut: "En attente",
-        date: "10/09/2023",
-        parcours: "Génie Logiciel",
-        mention:
-          "Sciences et Techniques du Numérique et Physiques Appliqués (STNPA)",
-        message: "Votre dossier est en cours d'évaluation",
-        nom: "Rasoa",
-        prenom: "Marie",
-      },
-    },
-    "2023L001": {
-      // Matricule pour examens
-      examens: {
-        semestre1: {
-          moyenne: 14.5,
-          rang: "25/120",
-          mentions: ["Bien", "Assez Bien", "Très Bien"],
-          ueValidees: 6,
-          ueNonValidees: 0,
-        },
-        semestre2: null,
-      },
-    },
-    "2023M001": {
-      examens: {
-        semestre1: {
-          moyenne: 16.2,
-          rang: "5/80",
-          mentions: ["Très Bien"],
-          ueValidees: 6,
-          ueNonValidees: 0,
-        },
-        semestre2: {
-          moyenne: 15.8,
-          rang: "8/80",
-          mentions: ["Bien"],
-          ueValidees: 6,
-          ueNonValidees: 0,
-        },
-      },
-    },
-  };
-
-  const rechercherResultat = (e) => {
+  const rechercherResultat = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setResultat(null);
-
-    // Simulation de requête API avec timeout
-    setTimeout(() => {
-      try {
-        if (typeRecherche === "preinscription") {
-          if (!cin) throw new Error("Veuillez entrer votre numéro CIN");
-
-          const resultatTrouve = resultatsSimules[cin]?.preinscription;
-
-          if (!resultatTrouve) {
-            throw new Error(
-              "Aucun résultat de pré-inscription trouvé pour ce numéro CIN"
-            );
-          }
-
-          // Vérification supplémentaire du nom/prénom si fournis
-          if (
-            (nom && resultatTrouve.nom.toLowerCase() !== nom.toLowerCase()) ||
-            (prenom &&
-              resultatTrouve.prenom.toLowerCase() !== prenom.toLowerCase())
-          ) {
-            throw new Error(
-              "Les informations ne correspondent pas à ce numéro CIN"
-            );
-          }
-
-          setResultat({
-            type: "preinscription",
-            identifiant: cin,
-            data: resultatTrouve,
-            matricule: resultatsSimules[cin]?.matricule,
-          });
-        } else {
-          if (!matricule)
-            throw new Error("Veuillez entrer votre numéro de matricule");
-
-          const resultatTrouve = resultatsSimules[matricule]?.examens;
-
-          if (!resultatTrouve) {
-            throw new Error("Aucun résultat d'examen trouvé pour ce matricule");
-          }
-
-          // Vérification par semestre
-          const semestreDisponible = Object.keys(resultatTrouve).find(
-            (s) => resultatTrouve[s] !== null
-          );
-          if (!semestreDisponible) {
-            throw new Error(
-              "Aucun résultat d'examen disponible pour le moment"
-            );
-          }
-
-          setResultat({
-            type: "examens",
-            identifiant: matricule,
-            data: resultatTrouve,
-          });
+  
+    try {
+      if (typeRecherche === "preinscription") {
+        if (!cin) throw new Error("Veuillez entrer votre numéro CIN");
+  
+        const response = await fetch(
+          `http://localhost:8080/api/resultats/preinscription/${cin}`
+        );
+  
+        if (!response.ok) {
+          const msg = await response.text();
+          throw new Error(msg || "Erreur serveur");
         }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+  
+        const data = await response.json();
+  
+        // Vérifie les noms si fournis
+        if (
+          (nom && data.nom.toLowerCase() !== nom.toLowerCase()) ||
+          (prenom && data.prenom.toLowerCase() !== prenom.toLowerCase())
+        ) {
+          throw new Error("Les informations ne correspondent pas à ce numéro CIN");
+        }
+  
+        setResultat({
+          type: "preinscription",
+          identifiant: cin,
+          data,
+          matricule: data.matricule || null,
+        });
+      } else {
+        if (!matricule) throw new Error("Veuillez entrer votre numéro de matricule");
+  
+        const response = await fetch(
+          `http://localhost:8080/api/resultats/examen/${matricule}`
+        );
+  
+        if (!response.ok) {
+          const msg = await response.text();
+          throw new Error(msg || "Erreur serveur");
+        }
+  
+        const data = await response.json();
+  
+        setResultat({
+          type: "examens",
+          identifiant: matricule,
+          data,
+        });
       }
-    }, 1000);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
+  
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg">

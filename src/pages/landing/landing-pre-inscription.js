@@ -58,7 +58,7 @@ function PreInscriptionForm() {
     // État civil
     dateNaissance: "",
     lieuNaissance: "",
-    region: "", // Région ajoutée
+    cin: "", // Région ajoutée
     pays: "", // Pays ajouté
     nationalite: "",
     genre: "",
@@ -123,12 +123,58 @@ function PreInscriptionForm() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Envoie data any am serveur
-    console.log("Formulaire soumis:", formData);
-    alert("Pré-inscription soumise avec succès!");
+  
+    const form = new FormData();
+  
+    // Ajouter les fichiers au FormData
+    const fichiers = [
+      "photoIdentite",
+      "copieDiplome",
+      "releveNotes",
+      "recuPaiement",
+      "acteNaissance",
+      "certificatResidence",
+      "enveloppesTimbrees",
+    ];
+    fichiers.forEach((champ) => {
+      if (formData[champ]) {
+        form.append(champ, formData[champ]);
+      }
+    });
+  
+    // Préparer les données JSON sans les fichiers
+    const champsTexte = { ...formData };
+    fichiers.forEach((champ) => delete champsTexte[champ]);
+  
+    form.append(
+      "data",
+      new Blob([JSON.stringify(champsTexte)], {
+        type: "application/json",
+      })
+    );
+  
+    console.log(formData)
+    try {
+      const response = await fetch("http://localhost:8080/api/preinscription", {
+        method: "POST",
+        body: form,
+      });
+  
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error("Erreur du serveur : " + message);
+      }
+  
+      const result = await response.json();
+      alert("✅ Pré-inscription envoyée avec succès !\n\nStatut : " + result.status);
+    } catch (error) {
+      console.error("Erreur lors de l'envoi :", error);
+      alert("❌ Une erreur est survenue : " + error.message);
+    }
   };
+  
 
   return (
     <>
@@ -265,12 +311,12 @@ function PreInscriptionForm() {
 
               <div>
                 <label className="block text-sm font-medium text-left text-gray-700 mb-1">
-                  <LabelRequis>Région</LabelRequis>
+                  <LabelRequis>CIN</LabelRequis>
                 </label>
                 <input
                   type="text"
-                  name="region"
-                  value={formData.region}
+                  name="cin"
+                  value={formData.cin}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
