@@ -1,7 +1,8 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContexts";
 import Dashboard from "../pages/protected/dashboard";
-import PreinscriptionPage from "../pages/dashboard/preinscriptions";
+import PreinscriptionPage from "../pages/dashboard/preinscriptions/PreinscriptionPage";
+
 
 // Pages publiques
 import Carousel from "../pages/landing/landing-accueil";

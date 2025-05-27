@@ -1,9 +1,7 @@
 import { useState } from "react";
 
-function ResultatsPreinscription() {
-  const [cin, setCin] = useState("");
-  const [nom, setNom] = useState("");
-  const [prenom, setPrenom] = useState("");
+function ResultatsExamens() {
+  const [matricule, setMatricule] = useState("");
   const [parcours, setParcours] = useState("");
   const [mention, setMention] = useState("");
   const [resultat, setResultat] = useState(null);
@@ -17,10 +15,12 @@ function ResultatsPreinscription() {
     setResultat(null);
 
     try {
-      if (!cin) throw new Error("Veuillez entrer votre numéro CIN");
+      if (!matricule) {
+        throw new Error("Veuillez entrer votre numéro de matricule");
+      }
 
       const response = await fetch(
-        `http://localhost:8080/api/resultats/preinscription/${cin}`
+        `http://localhost:8080/api/resultats/examen/${matricule}`
       );
 
       if (!response.ok) {
@@ -29,20 +29,10 @@ function ResultatsPreinscription() {
       }
 
       const data = await response.json();
-      console.log(data);
-
-      if (
-        data.length === 0
-      ) {
-        throw new Error(
-          "Les informations ne correspondent pas à ce numéro CIN"
-        );
-      }
 
       setResultat({
-        identifiant: cin,
+        identifiant: matricule,
         data,
-        matricule: data.matricule || null,
       });
     } catch (err) {
       setError(err.message);
@@ -54,7 +44,7 @@ function ResultatsPreinscription() {
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg">
       <h1 className="text-4xl py-2 text-center font-bold text-[#f4b400]">
-        Résultats de Pré-inscription
+        Résultats d'Examens
       </h1>
 
       <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
@@ -75,7 +65,7 @@ function ResultatsPreinscription() {
           </div>
           <div className="ml-3">
             <p className="text-sm text-blue-700">
-              Consultez le statut de votre pré-inscription en entrant votre numéro CIN
+              Consultez vos résultats d'examens en entrant votre numéro de matricule
             </p>
           </div>
         </div>
@@ -89,43 +79,15 @@ function ResultatsPreinscription() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-left text-gray-700 mb-1">
-                Numéro CIN <span className="text-red-500">*</span>
+                Numéro de matricule <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                value={cin}
-                onChange={(e) => setCin(e.target.value)}
+                value={matricule}
+                onChange={(e) => setMatricule(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Votre numéro CIN"
+                placeholder="Ex: 2023L001"
                 required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-left text-gray-700 mb-1">
-                Nom (optionnel)
-              </label>
-              <input
-                type="text"
-                value={nom}
-                onChange={(e) => setNom(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Votre nom"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-left text-gray-700 mb-1">
-                Prénom (optionnel)
-              </label>
-              <input
-                type="text"
-                value={prenom}
-                onChange={(e) => setPrenom(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Votre prénom"
               />
             </div>
           </div>
@@ -205,91 +167,91 @@ function ResultatsPreinscription() {
         {resultat && (
           <div className="bg-white border p-6 rounded-md shadow-sm">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Résultat de Pré-inscription
+              Résultats d'Examens
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="bg-gray-50 p-4 rounded-md">
-                <p className="text-sm font-medium text-gray-500">Numéro CIN</p>
+                <p className="text-sm font-medium text-gray-500">Matricule</p>
                 <p className="text-lg font-semibold">{resultat.identifiant}</p>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-md">
-                <p className="text-sm font-medium text-gray-500">Statut</p>
-                <p
-                  className={`text-lg font-semibold ${
-                    resultat.data.status === "ACCEPTE"
-                      ? "text-green-600"
-                      :  resultat.data.status === "EN_ATTENTE"
-                      ? "text-black-600"
-                      : resultat.data.status === "REFUSE"
-                      ? "text-red-600"
-                      : "text-yellow-600"
-                  }`}
-                >
-                  {resultat.data.status}
-                </p>
-              </div>
-
-              <div className="bg-gray-50 p-4 rounded-md">
-                <p className="text-sm font-medium text-gray-500">Date</p>
-                <p className="text-lg font-semibold">{new Date(resultat.data.updatedAt).toLocaleDateString('fr-FR')}</p>
-              </div>
+              {Object.entries(resultat.data).map(
+                ([semestre, data]) =>
+                  data && (
+                    <div key={semestre} className="bg-gray-50 p-4 rounded-md">
+                      <p className="text-sm font-medium text-gray-500">
+                        Semestre {semestre.replace("semestre", "")}
+                      </p>
+                      <p className="text-lg font-semibold">
+                        {data.moyenne}/20
+                      </p>
+                      <p className="text-sm">Rang: {data.rang}</p>
+                    </div>
+                  )
+              )}
             </div>
 
-            <div className="space-y-4">
-              {resultat.data.informationsPersonnelles.nom && resultat.data.informationsPersonnelles.prenom && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Nom</p>
-                    <p className="text-base">{resultat.data.informationsPersonnelles.nom}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Prénom</p>
-                    <p className="text-base">{resultat.data.informationsPersonnelles.prenom}</p>
-                  </div>
-                </div>
-              )}
+            <div className="space-y-6">
+              {Object.entries(resultat.data).map(
+                ([semestre, data]) =>
+                  data && (
+                    <div
+                      key={semestre}
+                      className="border-b pb-6 last:border-b-0 last:pb-0"
+                    >
+                      <h3 className="text-xl font-semibold mb-4">
+                        Semestre {semestre.replace("semestre", "")}
+                      </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Mention</p>
-                  <p className="text-base">{resultat.data.parcoursAcademique.mention}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Parcours</p>
-                  <p className="text-base">{resultat.data.parcoursAcademique.parcours}</p>
-                </div>
-              </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div className="bg-gray-50 p-4 rounded-md">
+                          <p className="text-sm font-medium text-gray-500">
+                            Moyenne
+                          </p>
+                          <p className="text-2xl font-bold">
+                            {data.moyenne}/20
+                          </p>
+                        </div>
 
-              {resultat.matricule && (
-                <div className="mt-4 p-4 bg-green-50 rounded-md">
-                  <p className="font-medium text-green-800">
-                    Votre numéro de matricule:{" "}
-                    <span className="ml-2">{resultat.matricule}</span>
-                  </p>
-                  <p className="text-sm text-green-600 mt-1">
-                    Conservez précieusement ce numéro pour vos futures démarches
-                  </p>
-                </div>
-              )}
+                        <div className="bg-gray-50 p-4 rounded-md">
+                          <p className="text-sm font-medium text-gray-500">
+                            Rang
+                          </p>
+                          <p className="text-2xl font-bold">{data.rang}</p>
+                        </div>
 
-              {resultat.data.frais && (
-                <div className="mt-4 p-4 bg-blue-50 rounded-md">
-                  <p className="font-medium text-blue-800">
-                    Frais d'inscription:{" "}
-                    <span className="ml-2">{resultat.data.frais}</span>
-                  </p>
-                  <p className="text-sm text-blue-600 mt-1">
-                    {resultat.data.message}
-                  </p>
-                </div>
-              )}
+                        <div className="bg-gray-50 p-4 rounded-md">
+                          <p className="text-sm font-medium text-gray-500">
+                            Mentions
+                          </p>
+                          <p className="text-lg font-semibold">
+                            {data.mentions.join(", ")}
+                          </p>
+                        </div>
+                      </div>
 
-              {resultat.data.statut === "EN_ATTENTE" && (
-                <div className="mt-4 p-4 bg-yellow-50 rounded-md">
-                  <p className="text-yellow-800">{resultat.data.message}</p>
-                </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="bg-green-50 p-4 rounded-md">
+                          <p className="text-sm font-medium text-green-800">
+                            UE Validées
+                          </p>
+                          <p className="text-xl font-bold text-green-600">
+                            {data.ueValidees}
+                          </p>
+                        </div>
+
+                        <div className="bg-red-50 p-4 rounded-md">
+                          <p className="text-sm font-medium text-red-800">
+                            UE Non Validées
+                          </p>
+                          <p className="text-xl font-bold text-red-600">
+                            {data.ueNonValidees}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )
               )}
             </div>
           </div>
@@ -315,7 +277,7 @@ function ResultatsPreinscription() {
               </div>
               <div className="ml-3">
                 <p className="text-sm text-gray-700">
-                  Entrez votre numéro CIN pour consulter votre résultat de pré-inscription
+                  Entrez votre numéro de matricule pour consulter vos résultats d'examens
                 </p>
               </div>
             </div>
@@ -326,4 +288,4 @@ function ResultatsPreinscription() {
   );
 }
 
-export default ResultatsPreinscription;
+export default ResultatsExamens;
