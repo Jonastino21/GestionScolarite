@@ -16,9 +16,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 /* ────────────  CONSTANTES ──────────── */
 const STATUS = {
-  PENDING: "En attente",
-  ACCEPTED: "Accepté",
-  REJECTED: "Refusé",
+  PENDING: "EN_ATTENTE",
+  ACCEPTED: "ACCEPTE",
+  REJECTED: "REFUSE",
 };
 
 const STATUS_COLORS = {
@@ -97,11 +97,12 @@ export default function ManagePreInscriptions() {
   const confirmAction = async () => {
     if (!currentApp) return;
     try {
-      const res = await fetch(`${API_BASE}/${currentApp.id}/status`, {
-        method: "PATCH",
+      const res = await fetch(`${API_BASE}/${currentApp.id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: nextStatus }),
       });
+      console.log(res.json())
       if (!res.ok) throw new Error("Réponse " + res.status);
       setApplications((prev) =>
         prev.map((a) => (a.id === currentApp.id ? { ...a, status: nextStatus } : a))

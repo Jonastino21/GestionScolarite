@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 
 const mentionsOptions = {
   "Licence professionnelle": {
-    "Sciences et Techniques du Numérique et Physiques Appliqués (STNPA)": [
+    "Sciences et Techniques du Numérique et Physiques Appliqués (STNPA)":[
       "Génie Informatique",
       "Génie Électronique Informatique",
       "Génie Biomédical (L2 après PACES ou équivalent)",

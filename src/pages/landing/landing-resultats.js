@@ -20,7 +20,7 @@ function ResultatsPreinscription() {
       if (!cin) throw new Error("Veuillez entrer votre numéro CIN");
 
       const response = await fetch(
-        `http://localhost:8080/api/resultats/preinscription/${cin}`
+        `http://localhost:8080/api/resultats/preinscription/${cin}?nom=${nom}&prenom=${prenom}&mention=${mention}&parcours=${parcours}`
       );
 
       if (!response.ok) {
@@ -141,9 +141,9 @@ function ResultatsPreinscription() {
                 className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Toutes mentions</option>
-                <option value="STNPA">STNPA</option>
-                <option value="STI">STI</option>
-                <option value="STGC">STGC</option>
+                <option value="Sciences et Techniques du Numérique et Physiques Appliqués (STNPA)">Sciences et Techniques du Numérique et Physiques Appliqués (STNPA)</option>
+                <option value="Sciences et Technologies Industrielles (STI)">Sciences et Technologies Industrielles (STI)</option>
+                <option value="Sciences et Technologies des Génies Civils (STGC)">Sciences et Technologies des Génies Civils (STGC)</option>
               </select>
             </div>
 
