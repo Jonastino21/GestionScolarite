@@ -9,7 +9,7 @@ const Dashboard = () => {
         <title>ISSTM - Dashboard Scolarité</title>
       </Helmet>
 
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-auto bg-gray-50">
         {/* Sidebar Navigation */}
         <div className="w-64 bg-white shadow-md">
           <div className="p-4 ">
@@ -32,7 +32,7 @@ const Dashboard = () => {
                 text="Inscriptions"
               />
               <NavItem
-                to="/dashboard/certificats"
+                to="/dashboard/certificates"
                 icon="🏆"
                 text="Certificats"
               />

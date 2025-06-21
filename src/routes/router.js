@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContexts";
 import Dashboard from "../pages/protected/dashboard";
 import PreinscriptionPage from "../pages/dashboard/preinscriptions/PreinscriptionPage";
+import CertificatePage from "../pages/dashboard/certificates/CertificatePage";
 
 
 // Pages publiques
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "preinscription",
         element: <PreinscriptionPage />,
+      },
+      {
+        path: "certificates",
+        element: <CertificatePage />,
       },
       // autres enfants
     ],
