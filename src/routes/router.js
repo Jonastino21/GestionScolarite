@@ -2,7 +2,11 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContexts";
 import Dashboard from "../pages/protected/dashboard";
 import PreinscriptionPage from "../pages/dashboard/preinscriptions/PreinscriptionPage";
+<<<<<<< HEAD
 import CertificatePage from "../pages/dashboard/certificates/CertificatePage";
+=======
+import SallesPage from "../pages/dashboard/salles/SallesPage";
+>>>>>>> db6452b (jonas)
 
 
 // Pages publiques
@@ -36,8 +40,13 @@ const router = createBrowserRouter([
         element: <PreinscriptionPage />,
       },
       {
+<<<<<<< HEAD
         path: "certificates",
         element: <CertificatePage />,
+=======
+        path: "salles",
+        element: <SallesPage />,
+>>>>>>> db6452b (jonas)
       },
       // autres enfants
     ],
