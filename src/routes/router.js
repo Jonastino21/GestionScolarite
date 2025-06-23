@@ -5,6 +5,8 @@ import PreinscriptionPage from "../pages/dashboard/preinscriptions/Preinscriptio
 import CertificatePage from "../pages/dashboard/certificates/CertificatePage";
 import SallesPage from "../pages/dashboard/salles/SallesPage";
 import EquipementsPage from "../pages/dashboard/logistique/EquipementsPage";
+import TimeTableRender from "../pages/protected/emploid-du-temps";
+import ClassesList from "../pages/protected/classeList";
 
 
 // Pages publiques
@@ -47,6 +49,11 @@ const router = createBrowserRouter([
        { path: "logistique",
         element: <EquipementsPage />
       },
+      {
+        path: "emploi-du-temps/:classeId",
+        element: <TimeTableRender />
+      },
+      { path: "emploi-du-temps", element: <ClassesList /> }
       // autres enfants
     ],
   },
