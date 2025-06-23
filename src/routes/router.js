@@ -2,7 +2,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContexts";
 import Dashboard from "../pages/protected/dashboard";
 import PreinscriptionPage from "../pages/dashboard/preinscriptions";
-
+import RessourcesHumainesPage from "../pages/dashboard/ressourcesHumaines/indexRh";
+import RhDashboard from "../pages/dashboard/ressourcesHumaines/RhDashboard";
 // Pages publiques
 import Carousel from "../pages/landing/landing-accueil";
 import PreInscriptionForm from "../pages/landing/landing-pre-inscription";
@@ -24,14 +25,18 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: (
-      <ProtectedRoute>
+      // <ProtectedRoute>
         <Dashboard />
-      </ProtectedRoute>
+      // </ProtectedRoute>
     ),
     children: [
       {
         path: "preinscription",
         element: <PreinscriptionPage />,
+      },
+      {
+        path:"rh",
+        element:<RhDashboard />
       },
       // autres enfants
     ],

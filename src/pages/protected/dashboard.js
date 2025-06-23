@@ -11,7 +11,7 @@ const Dashboard = () => {
 
       <div className="flex h-screen bg-gray-50">
         {/* Sidebar Navigation */}
-        <div className="w-64 bg-white shadow-md">
+        <div className="w-64 bg-white shadow-md overflow-y-scroll">
           <div className="p-4 ">
             <h1 className="text-xl font-bold text-gray-800 flex items-center">
               <span className="text-[#f4b400]">ISSTM </span> Scolarité
