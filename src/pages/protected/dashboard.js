@@ -11,7 +11,7 @@ const Dashboard = () => {
 
       <div className="flex h-auto bg-gray-50">
         {/* Sidebar Navigation */}
-        <div className="w-64 bg-white shadow-md">
+        <div className="w-70 bg-white shadow-md">
           <div className="p-4 ">
             <h1 className="text-xl font-bold text-gray-800 flex items-center">
               <span className="text-[#f4b400]">ISSTM </span> Scolarité
@@ -102,15 +102,15 @@ const NavItem = ({ to, icon, text }) => {
       <NavLink
         to={to}
         className={({ isActive }) =>
-          `flex items-center p-3 rounded-lg transition-colors ${
+          `flex items-center py-2 text-gray-700 ${
             isActive
-              ? "bg-[#f4b400]/10 text-[#f4b400] font-medium"
+              ? "bg-gray-100 rounded-md"
               : "text-gray-600 hover:bg-gray-100"
           }`
         }
       >
-        <span className="mr-3 text-lg">{icon}</span>
-        <span>{text}</span>
+        <span className="h-5 w-5 text-gray-500">{icon}</span>
+        <span className="ml-3 font-medium">{text}</span>
       </NavLink>
     </li>
   );

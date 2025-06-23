@@ -4,6 +4,7 @@ import Dashboard from "../pages/protected/dashboard";
 import PreinscriptionPage from "../pages/dashboard/preinscriptions/PreinscriptionPage";
 import CertificatePage from "../pages/dashboard/certificates/CertificatePage";
 import SallesPage from "../pages/dashboard/salles/SallesPage";
+import EquipementsPage from "../pages/dashboard/logistique/EquipementsPage";
 
 
 // Pages publiques
@@ -42,6 +43,9 @@ const router = createBrowserRouter([
 
        { path: "salles",
         element: <SallesPage />
+      },
+       { path: "logistique",
+        element: <EquipementsPage />
       },
       // autres enfants
     ],
